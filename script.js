@@ -1,69 +1,43 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const themeElements = document.querySelectorAll(".theme");
-  const themeDescription = document.getElementById("theme-description");
-  const themeVisual = document.getElementById("theme-visual");
+// Function to apply AI theme and get AI-generated effects or images
+async function applyTheme() {
+    const themeInput = document.getElementById('themeInput').value.trim().toLowerCase();
+    const themeResultDiv = document.getElementById('themeResult');
+    
+    // Check if the input is empty
+    if (!themeInput) {
+        themeResultDiv.innerHTML = "<p>Please enter a valid theme.</p>";
+        return;
+    }
 
-  themeElements.forEach((themeElement, index) => {
-    themeElement.style.setProperty("--i", index);
-    themeElement.addEventListener("click", () => {
-      const selectedTheme = themeElement.dataset.theme;
-      fetchThemeEffect(selectedTheme);
-    });
-  });
+    // Disable the button while fetching
+    document.querySelector('button').disabled = true;
+    themeResultDiv.innerHTML = "<p>Loading...</p>";
 
-  // Fetch theme effect from the backend
-  async function fetchThemeEffect(theme) {
+    // Call the backend API to get theme-related effects or image
     try {
-      const response = await fetch('http://127.0.0.1:5000/generate-theme', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ theme })
-      });
+        const response = await fetch('http://localhost:5000/generate-theme', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ theme: themeInput })
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (data.error) {
-        themeDescription.innerHTML = `<p>Error: ${data.error}</p>`;
-        themeVisual.innerHTML = '';
-      } else {
-        themeDescription.innerHTML = `<p>${data.description}</p>`;
-        render3DEffect(data.image_url); // Use the URL for the background or other 3D objects
-      }
+        if (data.error) {
+            themeResultDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+        } else {
+            if (data.image_url) {
+                themeResultDiv.innerHTML = `<img src="${data.image_url}" alt="${themeInput} theme image">`;
+            } else {
+                themeResultDiv.innerHTML = `<p>${data.description}</p>`;
+            }
+        }
     } catch (error) {
-      themeDescription.innerHTML = `<p>Error occurred while fetching theme data. Please try again later.</p>`;
+        themeResultDiv.innerHTML = "<p>Error occurred while fetching theme data. Please try again later.</p>";
+    } finally {
+        // Enable the button after fetching
+        document.querySelector('button').disabled = false;
     }
-  }
-
-  // Example of setting up a 3D effect using Three.js
-  function render3DEffect(imageUrl) {
-    // Create a new Three.js scene
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(300, 300);
-    themeVisual.innerHTML = ''; // Clear previous 3D content
-    themeVisual.appendChild(renderer.domElement);
-
-    // Create a cube geometry
-    const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial({
-      map: new THREE.TextureLoader().load(imageUrl) // Load a texture from the provided image URL
-    });
-    const cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
-
-    camera.position.z = 5;
-
-    // Animation loop
-    function animate() {
-      requestAnimationFrame(animate);
-
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
-
-      renderer.render(scene, camera);
-    }
-
-    animate();
-  }
-});
+}
