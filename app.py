@@ -1,7 +1,3 @@
-from flask import Flask, jsonify, request
-
-app = Flask(__name__)
-
 @app.route('/generate-theme', methods=['POST'])
 def generate_theme():
     data = request.get_json()
@@ -25,6 +21,3 @@ def generate_theme():
         })
     else:
         return jsonify({'error': 'Theme not recognized'}), 400
-
-if __name__ == '__main__':
-    app.run(debug=True)
