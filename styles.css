@@ -1,0 +1,147 @@
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(45deg, #1e3c72, #2a5298);
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #fff;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+p {
+    font-size: 1.1rem;
+    color: #fff;
+    margin-top: 0;
+}
+
+a {
+    color: #FF69B4;
+    text-decoration: none;
+}
+
+footer {
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+/* Container */
+.container {
+    width: 80%;
+    max-width: 1200px;
+    padding: 30px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+}
+
+header {
+    margin-bottom: 40px;
+}
+
+/* Input Area */
+.theme-input {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+#themeInput {
+    width: 60%;
+    padding: 15px;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    border: none;
+    background-color: #333;
+    color: #fff;
+    outline: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+}
+
+#themeInput::placeholder {
+    color: #bbb;
+}
+
+#themeInput:focus {
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+}
+
+button {
+    padding: 15px 30px;
+    margin-left: 20px;
+    font-size: 1.1rem;
+    background-color: #FF69B4;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(255, 105, 180, 0.5);
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #ff4777;
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Theme Results */
+#themeResult {
+    padding: 30px;
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    transition: all 0.3s ease;
+}
+
+#themeResult img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+}
+
+#themeResult img:hover {
+    transform: scale(1.05);
+}
+
+#themeResult p {
+    font-size: 1.2rem;
+    color: #fff;
+    line-height: 1.5;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .theme-input {
+        flex-direction: column;
+    }
+
+    #themeInput {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    button {
+        width: 100%;
+    }
+}
