@@ -1,41 +1,37 @@
-from flask import Flask, request, jsonify
 import openai
-import os
-
-# Set up OpenAI API key
-openai.api_key = 'YOUR_OPENAI_API_KEY'  # Replace with your OpenAI API key
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
+# Set your OpenAI API Key
+openai.api_key = "your-openai-api-key"
+
 @app.route('/generate-theme', methods=['POST'])
 def generate_theme():
-    data = request.get_json()
-    theme = data.get('theme')
-
-    if not theme:
-        return jsonify({'error': 'No theme provided'}), 400
-
-    # Generate text description using GPT
     try:
-        # Query GPT-3 for a description of the theme
-        gpt_response = openai.Completion.create(
-            model="text-davinci-003",  # Or use another model if necessary
-            prompt=f"Describe a {theme} in detail.",
-            max_tokens=100
-        )
-        description = gpt_response.choices[0].text.strip()
+        # Get the JSON data from the request
+        data = request.get_json()
+        theme = data.get('theme', '')
 
-        # Use DALL·E to generate an image based on the theme
-        dalle_response = openai.Image.create(
-            prompt=theme,
-            n=1,
-            size="1024x1024"
-        )
-        image_url = dalle_response['data'][0]['url']
+        if not theme:
+            return jsonify({'error': 'No theme provided'}), 400
 
+        # Use the new ChatCompletion API to generate text based on the theme
+        response = openai.ChatCompletion.create(
+            model="gpt-4",  # You can use GPT-4 or other models
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": f"Describe a {theme} theme."}
+            ]
+        )
+
+        # Extract the generated message from the response
+        message = response['choices'][0]['message']['content']
+
+        # Example response: Return the generated description and an image URL
         return jsonify({
-            'description': description,
-            'image_url': image_url
+            'description': message,
+            'image_url': 'https://placekitten.com/400/400'  # Just a placeholder for testing
         })
     
     except Exception as e:
